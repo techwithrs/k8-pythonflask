@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-management-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-management-app
+  template:
+    metadata:
+      labels:
+        app: user-management-app
+    spec:
+      containers:
+        - name: user-management-app
+          image: your-docker-image-name
+          ports:
+            - containerPort: 5000
+          env:
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: password
+            - name: POSTGRES_DB
+              value: user_management_db
+          resources:
+            limits:
+              memory: "512Mi"
+            requests:
+              memory: "256Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-management-service
+spec:
+  selector:
+    app: user-management-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
+  type: LoadBalancer

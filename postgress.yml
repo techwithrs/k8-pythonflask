@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-management-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-management-db
+  template:
+    metadata:
+      labels:
+        app: user-management-db
+    spec:
+      containers:
+        - name: user-management-db
+          image: postgres
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: password
+            - name: POSTGRES_DB
+              value: user_management_db
+          volumeMounts:
+            - name: user-management-db-volume
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: user-management-db-volume
+          emptyDir: {}
